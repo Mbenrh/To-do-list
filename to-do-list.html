@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the webpage -->
+    <title>To Do List</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="to-do-list.css">
+</head>
+<body>
+    <!-- Container for the to-do list -->
+    <div class="container">
+        <div class="todo-app">
+            <!-- Title of the to-do list with an icon -->
+            <h2>TO-Do List <img src="images/icon.png"></h2>
+            <!-- Input field and button to add tasks -->
+            <div class="row">
+                <input type="text" id="input-box" placeholder="add your text">
+                <button onclick="addTask()">Add</button>
+            </div>
+            <!-- Container for the list of tasks -->
+            <ul id="list-container">
+                <!-- List items will be added dynamically -->
+                <!--
+                <li class="checked">task 1</li>
+                <li>task 2</li>
+                <li>task 3</li>
+                -->
+            </ul>
+        </div>
+    </div>
+    <!-- JavaScript code for dynamic task addition, deletion, and local storage -->
+    <script>
+        // Variables for DOM elements
+        const inputBox = document.getElementById("input-box");
+        const listContainer = document.getElementById("list-container");
+
+        // Function to add a new task
+        function addTask() {
+            // Check if input box is empty
+            if (inputBox.value === '') {
+                alert("you must write something");
+            } else {
+                // Create a new list item
+                let li = document.createElement("li");
+                li.innerHTML = inputBox.value;
+                listContainer.appendChild(li);
+
+                // Create a delete button for the task
+                let span = document.createElement("span");
+                span.innerHTML = "\u00d7";
+                li.appendChild(span);
+            }
+            // Clear the input box after adding task
+            inputBox.value = "";
+            // Save the updated task list
+            saveData();
+        }
+
+        // Event listener for clicking on list items or delete buttons
+        listContainer.addEventListener("click", function(e) {
+            // Toggle task completion status when clicking on the task
+            if (e.target.tagName === "LI") {
+                e.target.classList.toggle("checked");
+                saveData();
+            } else if (e.target.tagName === "SPAN") { // Remove task when clicking on the delete button
+                e.target.parentElement.remove();
+                saveData();
+            }
+        }, false);
+
+        // Function to save data to local storage
+        function saveData() {
+            localStorage.setItem("data", listContainer.innerHTML);
+        }
+
+        // Function to display tasks from local storage
+        function showTask() {
+            listContainer.innerHTML = localStorage.getItem("data");
+        }
+
+        // Call the function to display tasks from local storage when the page loads
+        showTask();
+    </script>
+</body>
+</html>
